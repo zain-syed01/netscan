@@ -1,0 +1,9 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: netscan-config
+  namespace: net-scanner
+data:
+  # Defaults documented here; the app also has its own sane defaults
+  SCAN_TIMEOUT: "0.5"
+  SCAN_CONCURRENCY: "100"

@@ -1,0 +1,52 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: netscan
+  namespace: net-scanner
+  labels:
+    app: netscan
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: netscan
+  template:
+    metadata:
+      labels:
+        app: netscan
+    spec:
+      containers:
+        - name: netscan
+          # Replace with your image once you push to a registry
+          image: netscan:1.0.0
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 8765
+              name: http
+          envFrom:
+            - configMapRef:
+                name: netscan-config
+          readinessProbe:
+            httpGet:
+              path: /healthz
+              port: http
+            initialDelaySeconds: 3
+            periodSeconds: 10
+          livenessProbe:
+            httpGet:
+              path: /healthz
+              port: http
+            initialDelaySeconds: 5
+            periodSeconds: 20
+          resources:
+            requests:
+              cpu: 50m
+              memory: 64Mi
+            limits:
+              cpu: 500m
+              memory: 256Mi
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: false
+            runAsNonRoot: true
+            runAsUser: 1000

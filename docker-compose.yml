@@ -1,0 +1,10 @@
+services:
+  netscan:
+    build: .
+    container_name: netscan
+    ports:
+      - "8765:8765"
+    # Bridge network is fine for demos (scan 127.0.0.1 inside the container,
+    # or other compose services). For scanning your real LAN on Linux, you can
+    # switch to: network_mode: host
+    restart: unless-stopped
