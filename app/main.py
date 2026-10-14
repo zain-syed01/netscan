@@ -48,7 +48,6 @@ async def api_scan_hosts(body: HostScanRequest) -> dict:
         results = await discover_hosts(
             body.target,
             timeout=body.timeout,
-            allow_public=body.allow_public,
         )
     except ValueError as exc:
         raise HTTPException(status_code=400, detail=str(exc)) from exc
@@ -68,7 +67,6 @@ async def api_scan_ports(body: PortScanRequest) -> dict:
             ip,
             body.ports,
             timeout=body.timeout,
-            allow_public=body.allow_public,
         )
     except ValueError as exc:
         raise HTTPException(status_code=400, detail=str(exc)) from exc

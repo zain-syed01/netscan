@@ -24,15 +24,12 @@ def cli() -> None:
 
 
 @cli.command("hosts")
-@click.option("--target", required=True, help="IP or CIDR, e.g. 192.168.1.0/24")
+@click.option("--target", required=True, help="Private IP or CIDR, e.g. 192.168.1.0/24")
 @click.option("--timeout", default=0.5, show_default=True, type=float)
-@click.option("--allow-public", is_flag=True, help="Allow non-private IPs (use carefully)")
-def hosts_cmd(target: str, timeout: float, allow_public: bool) -> None:
-    """Find live hosts on a network range."""
+def hosts_cmd(target: str, timeout: float) -> None:
+    """Find live hosts on a private network range."""
     try:
-        results = asyncio.run(
-            discover_hosts(target, timeout=timeout, allow_public=allow_public)
-        )
+        results = asyncio.run(discover_hosts(target, timeout=timeout))
     except ValueError as exc:
         raise click.ClickException(str(exc)) from exc
 
@@ -47,24 +44,15 @@ def hosts_cmd(target: str, timeout: float, allow_public: bool) -> None:
 
 
 @cli.command("ports")
-@click.option("--host", required=True, help="Single IP or hostname")
+@click.option("--host", required=True, help="Single private IP or hostname")
 @click.option("--ports", default="22,80,443,8080,8765", show_default=True)
 @click.option("--timeout", default=0.5, show_default=True, type=float)
-@click.option("--allow-public", is_flag=True)
 @click.option("--show-closed", is_flag=True, help="Also print closed ports")
-def ports_cmd(
-    host: str,
-    ports: str,
-    timeout: float,
-    allow_public: bool,
-    show_closed: bool,
-) -> None:
-    """Scan TCP ports on one host."""
+def ports_cmd(host: str, ports: str, timeout: float, show_closed: bool) -> None:
+    """Scan TCP ports on one private host."""
     try:
         ip = resolve_hostname(host)
-        results = asyncio.run(
-            scan_ports(ip, ports, timeout=timeout, allow_public=allow_public)
-        )
+        results = asyncio.run(scan_ports(ip, ports, timeout=timeout))
     except ValueError as exc:
         raise click.ClickException(str(exc)) from exc
 

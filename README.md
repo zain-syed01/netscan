@@ -17,7 +17,7 @@ Simple **IP discovery**, **TCP port scanner**, and **system health** dashboard �
 | **Port scan** | TCP-connect scan a host for open ports (`22,80,443` or ranges like `1-1024`) |
 | **System health** | Live CPU, memory, disk, load, and uptime for the machine/container running the app |
 
-Public IPs are blocked by default so accidental internet scans are harder. You can opt in with a checkbox / `--allow-public` if you know what you are doing.
+Only **private/local** ranges are allowed (`10.x`, `172.16–31.x`, `192.168.x`, `127.x`). Public internet scanning is disabled.
 
 ---
 
@@ -132,7 +132,7 @@ docker-compose.yml
 
 ## Safety
 
-- Default allow-list: private ranges (`10/8`, `172.16/12`, `192.168/16`, `127/8`)
+- Private/local ranges only (`10/8`, `172.16/12`, `192.168/16`, `127/8`) — public IPs are rejected
 - Max CIDR size: 1024 hosts
 - Max port range size: 5000 ports per scan
-- **Do not** scan networks without authorization
+- Only scan networks you own or have permission to test

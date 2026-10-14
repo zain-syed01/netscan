@@ -85,15 +85,14 @@ def is_private_ip(ip_str: str) -> bool:
     return any(ip in net for net in PRIVATE_NETWORKS)
 
 
-def assert_targets_allowed(ips: list[str], allow_public: bool) -> None:
-    """Block public IPs unless the user explicitly opts in."""
-    if allow_public:
-        return
+def assert_targets_allowed(ips: list[str]) -> None:
+    """Only private / local ranges are allowed — no public internet scanning."""
     public = [ip for ip in ips if not is_private_ip(ip)]
     if public:
         raise ValueError(
-            "Public IPs are blocked by default. "
-            "Only scan networks you own. Pass allow_public to override."
+            "Only private/local IPs are allowed "
+            "(10.x, 172.16–31.x, 192.168.x, 127.x). "
+            "Public internet scanning is disabled."
         )
 
 
@@ -139,12 +138,11 @@ async def is_host_alive(ip: str, timeout: float) -> tuple[bool, float | None]:
 async def discover_hosts(
     target: str,
     timeout: float = 0.5,
-    allow_public: bool = False,
     concurrency: int = 100,
 ) -> list[dict]:
     """Scan a CIDR / IP and return which hosts look alive."""
     ips = expand_targets(target)
-    assert_targets_allowed(ips, allow_public)
+    assert_targets_allowed(ips)
 
     sem = asyncio.Semaphore(concurrency)
     results: list[dict] = []
@@ -164,7 +162,6 @@ async def scan_ports(
     host: str,
     ports_text: str,
     timeout: float = 0.5,
-    allow_public: bool = False,
     concurrency: int = 200,
 ) -> list[dict]:
     """Scan ports on one host. Returns open/closed for each port."""
@@ -172,7 +169,7 @@ async def scan_ports(
     if len(ips) != 1:
         raise ValueError("Port scan needs a single host IP, not a CIDR range")
     ip = ips[0]
-    assert_targets_allowed([ip], allow_public)
+    assert_targets_allowed([ip])
 
     ports = parse_ports(ports_text)
     sem = asyncio.Semaphore(concurrency)
