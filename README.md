@@ -2,8 +2,6 @@
 
 Simple **IP discovery**, **TCP port scanner**, and **system health** dashboard — built in Python, packaged with Docker, and ready for Kubernetes.
 
-Made as a clean, readable portfolio project for IT / sysadmin resumes. Only scan networks you own or have permission to test.
-
 ![Python](https://img.shields.io/badge/Python-3.12-3776AB?logo=python&logoColor=white)
 ![FastAPI](https://img.shields.io/badge/FastAPI-async-009688)
 ![Docker](https://img.shields.io/badge/Docker-ready-2496ED?logo=docker&logoColor=white)
@@ -66,8 +64,8 @@ python3 -m venv .venv
 source .venv/bin/activate
 pip install -r requirements.txt
 
-# Web UI
-uvicorn app.main:app --host 0.0.0.0 --port 8765
+# Web UI (127.0.0.1 = only your machine can open it)
+uvicorn app.main:app --host 127.0.0.1 --port 8765
 # open http://127.0.0.1:8765
 ```
 
@@ -138,18 +136,3 @@ docker-compose.yml
 - Max CIDR size: 1024 hosts
 - Max port range size: 5000 ports per scan
 - **Do not** scan networks without authorization
-
----
-
-## Resume talking points
-
-- Built an async Python network scanner (TCP connect) with a FastAPI UI
-- Added system health monitoring with `psutil`
-- Containerized with Docker and defined Kubernetes Deployment / Service / probes
-- Enforced private-network defaults for safer scanning
-
----
-
-## License
-
-MIT — use it, tweak it, put it on your resume.
