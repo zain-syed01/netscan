@@ -23,6 +23,24 @@ Public IPs are blocked by default so accidental internet scans are harder. You c
 
 ---
 
+## Screenshots
+
+IP discovery finding a live host on localhost:
+
+![IP discovery](docs/screenshots/netscan-ip-discovery.png)
+
+Port scan showing open TCP ports:
+
+![Port scan](docs/screenshots/netscan-port-scan.png)
+
+System health (CPU, memory, disk, uptime):
+
+![System health](docs/screenshots/netscan-system-health.png)
+
+> This project is meant to be run **locally** (or in your own Docker/K8s). There is no login on the web UI, so do not expose port `8765` to the public internet.
+
+---
+
 ## Architecture
 
 ```text
